@@ -8,9 +8,10 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Verify Source Code') {
             steps {
-                git 'https://github.com/rahulraidevops/jenkins-docker-demo.git'
+                sh 'pwd'
+                sh 'ls -la'
             }
         }
 
