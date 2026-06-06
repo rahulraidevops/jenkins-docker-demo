@@ -29,7 +29,15 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                echo "Docker Push Placeholder"
+                script {
+                    
+                    docker.withRegistry('', 'dockerhub-creds') 
+                        {
+                            sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
+                    
+                        }
+                    }
+                }
             }
         }
     }
