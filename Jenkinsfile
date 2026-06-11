@@ -17,7 +17,18 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                echo "SonarQube Scan Placeholder"
+                script {
+                    def scannerHome = tool 'SonarQube Scanner installations'
+
+                    withSonarQubeEnv('sonarqube') {
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=jenkins-docker-demo \
+                        -Dsonar.projectName=jenkins-docker-demo \
+                        -Dsonar.sources=.
+                        """
+                    }
+                }
             }
         }
 
