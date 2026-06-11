@@ -4,6 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "rahulrai9/jenkins-docker-demo"
         IMAGE_TAG = "${BUILD_NUMBER}"
+        SCANNER_HOME = tool 'sonar-scanner'
     }
 
     stages {
@@ -17,17 +18,13 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                script {
-                    def scannerHome = tool 'sonar-scanner'
-
-                    withSonarQubeEnv('sonarqube') {
-                        sh """
-                        ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=jenkins-docker-demo \
-                        -Dsonar.projectName=jenkins-docker-demo \
-                        -Dsonar.sources=.
-                        """
-                    }
+                withSonarQubeEnv('sonarqube') {
+                    sh """
+                    ${SCANNER_HOME}/bin/sonar-scanner \
+                    -Dsonar.projectKey=jenkins-docker-demo \
+                    -Dsonar.projectName=jenkins-docker-demo \
+                    -Dsonar.sources=.
+                    """
                 }
             }
         }
@@ -41,12 +38,8 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    
-                    docker.withRegistry('', 'dockerhub-creds') 
-                        {
-                            sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
-                    
-                        }
+                    docker.withRegistry('', 'dockerhub-creds') {
+                        sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
                     }
                 }
             }
