@@ -52,5 +52,41 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy Application') {
+            steps {
+                sh '''
+                docker stop demo-app || true
+                docker rm demo-app || true
+
+                docker pull $IMAGE_NAME:$IMAGE_TAG
+
+                docker run -d \
+                --name demo-app \
+                -p 5000:5000 \
+                $IMAGE_NAME:$IMAGE_TAG
+                '''
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                script {
+                    sleep 10
+                }
+
+                sh '''
+                curl -f http://localhost:5000
+                '''
+            }
+        }
+
+        stage('Cleanup Old Images') {
+            steps {
+                sh '''
+                docker image prune -f
+                '''
+            }
+        }
     }
 }
