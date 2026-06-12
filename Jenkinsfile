@@ -72,7 +72,7 @@ pipeline {
         stage('Health Check') {
             steps {
                 script {
-                    sleep 10
+                    sleep 30
                 }
 
                 sh '''
