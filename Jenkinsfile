@@ -72,11 +72,11 @@ pipeline {
         stage('Health Check') {
             steps {
                 script {
-                    sleep 30
+                    sleep 10
                 }
 
                 sh '''
-                curl -f http://localhost:5000
+                curl -f http://13.203.214.237:5000
                 '''
             }
         }
