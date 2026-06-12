@@ -43,6 +43,17 @@ pipeline {
             }
         }
 
+        stage('Trivy Security Scan') {
+            steps {
+                sh '''
+                trivy image \
+                --severity HIGH,CRITICAL \
+                --no-progress \
+                $IMAGE_NAME:$IMAGE_TAG
+                '''
+            }
+        }
+
         stage('Push Docker Image') {
             steps {
                 script {
