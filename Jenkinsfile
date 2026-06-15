@@ -48,9 +48,14 @@ pipeline {
                 sh '''
                     trivy image \
                     --severity HIGH,CRITICAL \
-                    --no-progress \
-                    --format table \
-                    --output trivy-report.txt \
+                    --format json \
+                    --output trivy-report.json \
+                    ${IMAGE_NAME}:${IMAGE_TAG}
+
+                    trivy image \
+                    --severity HIGH,CRITICAL \
+                    --format sarif \
+                    --output trivy-report.sarif \
                     ${IMAGE_NAME}:${IMAGE_TAG}
                 '''
 
