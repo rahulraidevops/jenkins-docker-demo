@@ -44,14 +44,16 @@ pipeline {
         }
 
         stage('Trivy Security Scan') {
-            steps {
-                sh '''
+            sh '''
                 trivy image \
                 --severity HIGH,CRITICAL \
                 --no-progress \
-                $IMAGE_NAME:$IMAGE_TAG
-                '''
-            }
+                --format table \
+                --output trivy-report.txt \
+                ${IMAGE_NAME}:${IMAGE_TAG}
+            '''
+
+            archiveArtifacts artifacts: 'trivy-report.txt', fingerprint: true
         }
 
         stage('Push Docker Image') {
@@ -99,11 +101,5 @@ pipeline {
                 '''
             }
         }
-    }
-}
-
-post {
-    always {
-        archiveArtifacts artifacts: 'trivy-report.txt', fingerprint: true
     }
 }
