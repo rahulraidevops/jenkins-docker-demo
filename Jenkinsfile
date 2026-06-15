@@ -99,11 +99,11 @@ pipeline {
                 '''
             }
         }
+    }
+}
 
-        post {
-            always {
-                archiveArtifacts artifacts: 'trivy-report.txt', fingerprint: true
-            }
-        }
+post {
+    always {
+        archiveArtifacts artifacts: 'trivy-report.txt', fingerprint: true
     }
 }
